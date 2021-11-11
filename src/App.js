@@ -220,7 +220,7 @@ const App = () => {
   return (
     <ChakraProvider theme={theme}>
       <Box position="fixed" top="0" right="0" left="0" bottom="0" bg="gray.800" py={6} overflowY="scroll">
-        <Box width="500px" margin="0 auto" mt={8} border="1px solid #eee" borderRadius="5px" bg="white" p={6}>
+        <Box maxWidth="500px" margin="0 auto" mt={8} border="1px solid #eee" borderRadius="5px" bg="white" p={6}>
           <Heading>Track Your Handicap</Heading>
 
           <Text my={2}>
