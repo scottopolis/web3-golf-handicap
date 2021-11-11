@@ -239,12 +239,14 @@ const App = () => {
               p={4}
               m={4}
               borderRadius="5px"
-              fontSize="sm"
+              width="100%"
+              textAlign="center"
             >
               <Text mb={3}>First, connect your Metamask wallet.</Text>
               <Button
                 colorScheme="blue"
                 variant="outline"
+                margin="5px auto"
                 onClick={connectWallet}
               >
                 Connect Wallet
@@ -259,7 +261,7 @@ const App = () => {
 
           <HandicapForm onSubmit={submitScore} />
 
-          <Heading mt={6}>Scores</Heading>
+          {scores?.length && ( <Heading mt={6}>Scores</Heading> ) }
 
           {scores &&
             scores.map((score) => (
