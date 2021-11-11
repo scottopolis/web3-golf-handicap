@@ -9,20 +9,14 @@ import {
   Heading,
   Text,
   Button,
+  theme
 } from "@chakra-ui/react";
 import { HandicapForm } from "./components/HandicapForm";
-
-import { extendTheme } from "@chakra-ui/react";
-const config = {
-  initialColorMode: "dark",
-  useSystemColorMode: false,
-};
-
-const theme = extendTheme({ config });
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [scores, setScores] = useState([]);
+  const [loading, setLoading] = useState(false);
   const contractAddress = "0xa5D5f34e17fed8D792999E170570aF03F9CC851B";
   const contractABI = abiFile.abi;
 
@@ -52,8 +46,7 @@ const App = () => {
             rating: score.rating.toNumber(),
           });
         });
-        console.log(cleanScores.reverse());
-        setScores(cleanScores.reverse());
+        setScores(cleanScores);
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -77,7 +70,6 @@ const App = () => {
       console.log("on new score", course);
       // fancy way to update state. access previous state without doing let newWaves = waves. Returns new state.
       setScores((prevState) => [
-        ...prevState,
         {
           course: course,
           timestamp: new Date(timestamp.toNumber() * 1000),
@@ -87,6 +79,7 @@ const App = () => {
           slope: slope.toNumber(),
           rating: rating.toNumber(),
         },
+        ...prevState
       ]);
     };
 
@@ -159,6 +152,7 @@ const App = () => {
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
+      getAllScores();
     } catch (error) {
       console.log(error);
     }
@@ -176,6 +170,8 @@ const App = () => {
       return;
     }
     const { course, score, date, slope, rating } = data;
+
+    setLoading(true);
 
     try {
       const { ethereum } = window;
@@ -206,12 +202,14 @@ const App = () => {
         await waveTxn.wait();
         console.log("Mined -- ", waveTxn.hash);
 
-        getAllScores();
+        setLoading(false)
+        alert("Score submitted!")
       } else {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
       console.log(error);
+      setLoading(false)
     }
   };
 
@@ -221,7 +219,7 @@ const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box height="100vh" bg="gray.800" py={6}>
+      <Box position="fixed" top="0" right="0" left="0" bottom="0" bg="gray.800" py={6} overflowY="scroll">
         <Box width="500px" margin="0 auto" mt={8} border="1px solid #eee" borderRadius="5px" bg="white" p={6}>
           <Heading>Track Your Handicap</Heading>
 
@@ -237,10 +235,10 @@ const App = () => {
             <Box
               border="1px solid #eee"
               p={4}
-              m={4}
               borderRadius="5px"
               width="100%"
               textAlign="center"
+              bg="gray.50"
             >
               <Text mb={3}>First, connect your Metamask wallet.</Text>
               <Button
@@ -251,7 +249,7 @@ const App = () => {
               >
                 Connect Wallet
               </Button>
-              <Text mt={3}>Then switch to the Rinkeby test newtork.</Text>
+              <Text mt={3}>Then switch to the Rinkeby test network.</Text>
             </Box>
           ) : (
             <Text fontSize="xs" my={2} color="green.500">
@@ -259,7 +257,7 @@ const App = () => {
             </Text>
           )}
 
-          <HandicapForm onSubmit={submitScore} />
+          <HandicapForm loading={loading} onSubmit={submitScore} />
 
           {scores?.length && ( <Heading mt={6}>Scores</Heading> ) }
 
@@ -268,19 +266,19 @@ const App = () => {
               <Box
                 border="1px solid #eee"
                 borderRadius="5px"
-                my={2}
+                my={4}
                 key={score.timestamp.toString()}
                 fontSize="sm"
                 textAlign="left"
                 overflow="hidden"
               >
-                <Box px={4} py={2} bg="blue.800" color="gray.200">
+                <Box px={4} py={2} bg="gray.100" color="gray.600">
                   <Text fontSize="sm" fontWeight="500" isTruncated>
                     Golfer: {score.golfer}
                   </Text>
                 </Box>
 
-                <Box display="flex" justifyContent="space-evenly" alignItems="end" mt={3}>
+                <Box display="flex" justifyContent="space-between" alignItems="end" mt={3}>
                   <Box mx={4} display="flex" alignItems="end">
                     <Heading size="4xl" color="blue.500">
                       {score.score}
@@ -290,7 +288,7 @@ const App = () => {
                     </Text>
                   </Box>
 
-                  <Box textAlign="center" fontSize="xs" color="gray.500">
+                  <Box textAlign="center" fontSize="xs" color="gray.500" mr={4}>
                     <Text>Rating: {score.rating}</Text>
                     <Text>Slope: {score.slope}</Text>
                   </Box>
@@ -299,12 +297,12 @@ const App = () => {
                   px={4}
                   mt={4}
                   py={2}
-                  bg="gray.50"
+                  bg="gray.100"
                   display="flex"
                   justifyContent="space-between"
                   color="gray.700"
                 >
-                  <Text fontSize="xs" isTruncated mt={1}>
+                  <Text fontSize="xs" isTruncated mt={1} color="gray.500">
                     {score.timestamp.toString()}
                   </Text>
                 </Box>

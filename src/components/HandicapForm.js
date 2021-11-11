@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Input, Button } from "@chakra-ui/react";
 
 export const HandicapForm = (props) => {
-  const { onSubmit } = props;
+  const { onSubmit, loading } = props;
   const [form, setForm] = useState({});
   const handleInputChange = (event) => {
     const target = event.target;
@@ -40,6 +40,8 @@ export const HandicapForm = (props) => {
         colorScheme="blue"
         width="100%"
         mt={3}
+        isLoading={loading}
+        loadingText="Submitting"
       >
         Submit
       </Button>
