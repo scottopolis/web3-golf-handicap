@@ -9,8 +9,6 @@ import {
   Heading,
   Text,
   Button,
-  useColorMode,
-  ColorModeProvider,
 } from "@chakra-ui/react";
 import { HandicapForm } from "./components/HandicapForm";
 
@@ -25,7 +23,6 @@ const theme = extendTheme({ config });
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [scores, setScores] = useState([]);
-  const [submitScoreData, setSubmitScoreData] = useState("");
   const contractAddress = "0xa5D5f34e17fed8D792999E170570aF03F9CC851B";
   const contractABI = abiFile.abi;
 
@@ -165,10 +162,6 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const setData = (e) => {
-    console.log(e.target.value);
   };
 
   const submitScore = async (data) => {

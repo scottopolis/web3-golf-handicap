@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Input, Button, VStack } from "@chakra-ui/react";
+import { Box, Input, Button } from "@chakra-ui/react";
 
 export const HandicapForm = (props) => {
   const { onSubmit } = props;
